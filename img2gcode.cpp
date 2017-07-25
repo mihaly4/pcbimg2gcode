@@ -1,19 +1,56 @@
 #include "img2gcode.h"
 #include <QImage>
 #include <QFile>
+#include <QDebug>
+
+#define INCH2MM 25.4f
+#define Y_START 50.0f
 void Img2Gcode::InitializePrint()
 {
-    //TODO: Add initialization code
+    m_lGcode
+                <<"; Default start code"
+                <<"G28 ; Home extruder"
+                <<"G1 Z15 F2000"
+                <<"M107 ; Turn off fan"
+                <<"G90 ; Absolute positioning"
+                <<"G1 Z40.00";
 }
 
 void Img2Gcode::FinilizePrint()
 {
-    //TODO: Add finilization code
+    m_lGcode << "G28";
 }
 
-void Img2Gcode::GenerateLine(const uchar * pScanLine)
+void Img2Gcode::GenerateLine(int y)
 {
     //TODO: Add line generation code
+    bool bTraceOn = false;
+    int iTraceStart = 0;
+    for(int x = 0; x < m_pSrcImage->width(); x++)
+    {
+        bool bNewTraceOn = QColor(m_pSrcImage->pixel(x,y)).blue() > 20;
+        if(bNewTraceOn != bTraceOn)
+        {
+            bTraceOn = bNewTraceOn;
+            if(bTraceOn)
+            {
+                iTraceStart = x;
+            }
+            else
+            {
+                m_lGcode
+                        << MoveTo(iTraceStart, y)
+                        << "; Activate gpio here"
+                        << MoveTo(x-1, y)
+                        << "; Deactivate gpio here";
+            }
+        }
+    }
+}
+
+QString Img2Gcode::MoveTo(int x, int y)
+{
+    return QString() + "G1 X" + QString::number((x - m_pSrcImage->width() / 2) / (float)m_iImgDpi * INCH2MM) + " Y" + QString::number(y / (float)m_iImgDpi * INCH2MM - Y_START);
 }
 
 Img2Gcode::Img2Gcode(const QStringList &lArgs, QObject *parent) : QObject(parent)
@@ -36,7 +73,7 @@ void Img2Gcode::run()
     InitializePrint();
     for(int y = 0; y < m_pSrcImage->height(); y++)
     {
-        GenerateLine(m_pSrcImage->scanLine(y));
+        GenerateLine(y);
     }
     FinilizePrint();
     delete m_pSrcImage;
@@ -46,5 +83,6 @@ void Img2Gcode::run()
         tOutFile.write(m_lGcode.join("\n").toUtf8());
         tOutFile.close();
     }
+    qDebug() << "Done";
     emit finished();
 }

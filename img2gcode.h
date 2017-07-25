@@ -16,7 +16,8 @@ class Img2Gcode : public QObject
 
     void InitializePrint();
     void FinilizePrint();
-    void GenerateLine(const uchar * pScanLine);
+    void GenerateLine(int y);
+    QString MoveTo(int x, int y);
 
 public:
     explicit Img2Gcode(const QStringList & lArgs, QObject *parent = nullptr);
