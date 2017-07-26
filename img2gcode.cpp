@@ -4,7 +4,8 @@
 #include <QDebug>
 
 #define INCH2MM 25.4f
-#define Y_START 50.0f
+#define Y_START -40.0f
+#define X_START -40.0f
 void Img2Gcode::InitializePrint()
 {
     m_lGcode
@@ -49,7 +50,7 @@ void Img2Gcode::GenerateLine(int y)
 
 QString Img2Gcode::MoveTo(int x, int y)
 {
-    return QString() + "G1 X" + QString::number((x - m_pSrcImage->width() / 2) / m_fImgDpiX * INCH2MM) + " Y" + QString::number(y / m_fImgDpiY * INCH2MM - Y_START);
+    return QString() + "G1 X" + QString::number(x / m_fImgDpiX * INCH2MM + X_START) + " Y" + QString::number(y / m_fImgDpiY * INCH2MM + Y_START);
 }
 
 Img2Gcode::Img2Gcode(const QStringList &lArgs, QObject *parent) : QObject(parent)
