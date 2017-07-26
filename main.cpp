@@ -14,12 +14,11 @@ int main(int argc, char *argv[])
     parser.setApplicationDescription("PCB image to G-Code convertor");
     parser.addHelpOption();
     parser.addVersionOption();
-    parser.addPositionalArgument("dpi", QCoreApplication::translate("main", "DPI of the PCB image."));
     parser.addPositionalArgument("img", QCoreApplication::translate("main", "PCB image."));
     parser.addPositionalArgument("out", QCoreApplication::translate("main", "G-code file."));
     parser.addPositionalArgument("pin", QCoreApplication::translate("main", "Laser control pin."));
     parser.process(a);
-    if(parser.positionalArguments().count() != 4)
+    if(parser.positionalArguments().count() != 3)
     {
         parser.showHelp(-1);
     }

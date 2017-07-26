@@ -49,16 +49,17 @@ void Img2Gcode::GenerateLine(int y)
 
 QString Img2Gcode::MoveTo(int x, int y)
 {
-    return QString() + "G1 X" + QString::number((x - m_pSrcImage->width() / 2) / (float)m_iImgDpi * INCH2MM) + " Y" + QString::number(y / (float)m_iImgDpi * INCH2MM - Y_START);
+    return QString() + "G1 X" + QString::number((x - m_pSrcImage->width() / 2) / m_fImgDpiX * INCH2MM) + " Y" + QString::number(y / m_fImgDpiY * INCH2MM - Y_START);
 }
 
 Img2Gcode::Img2Gcode(const QStringList &lArgs, QObject *parent) : QObject(parent)
 {
-    m_iImgDpi = lArgs[0].toInt();
-    m_sImgFileName = lArgs[1];
-    m_sGcodeFileName = lArgs[2];
+    m_fImgDpiX = 400;
+    m_fImgDpiY = 400;
+    m_sImgFileName = lArgs[0];
+    m_sGcodeFileName = lArgs[1];
     m_pSrcImage = NULL;
-    m_sLaserPin = lArgs[3];
+    m_sLaserPin = lArgs[2];
 }
 
 Img2Gcode::~Img2Gcode()
@@ -69,6 +70,8 @@ Img2Gcode::~Img2Gcode()
 void Img2Gcode::run()
 {
     m_pSrcImage = new QImage(m_sImgFileName);
+    m_fImgDpiX = m_pSrcImage->dotsPerMeterX() * INCH2MM / 1000.0f;
+    m_fImgDpiY = m_pSrcImage->dotsPerMeterY() * INCH2MM / 1000.0f;
     m_lGcode.clear();
     InitializePrint();
     for(int y = 0; y < m_pSrcImage->height(); y++)

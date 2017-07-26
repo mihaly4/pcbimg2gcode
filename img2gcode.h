@@ -8,7 +8,8 @@ class Img2Gcode : public QObject
 {
     Q_OBJECT
 
-    int         m_iImgDpi;
+    float       m_fImgDpiX;
+    float       m_fImgDpiY;
     QImage *    m_pSrcImage;
     QString     m_sImgFileName;
     QString     m_sGcodeFileName;
