@@ -13,6 +13,7 @@ class Img2Gcode : public QObject
     QString     m_sImgFileName;
     QString     m_sGcodeFileName;
     QStringList m_lGcode;
+    QString     m_sLaserPin;
 
     void InitializePrint();
     void FinilizePrint();

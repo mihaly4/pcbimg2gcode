@@ -23,7 +23,6 @@ void Img2Gcode::FinilizePrint()
 
 void Img2Gcode::GenerateLine(int y)
 {
-    //TODO: Add line generation code
     bool bTraceOn = false;
     int iTraceStart = 0;
     for(int x = 0; x < m_pSrcImage->width(); x++)
@@ -40,9 +39,9 @@ void Img2Gcode::GenerateLine(int y)
             {
                 m_lGcode
                         << MoveTo(iTraceStart, y)
-                        << "; Activate gpio here"
+                        << ("M42 P" + m_sLaserPin + " S255")
                         << MoveTo(x-1, y)
-                        << "; Deactivate gpio here";
+                        << ("M42 P" + m_sLaserPin + " S0");
             }
         }
     }
@@ -59,6 +58,7 @@ Img2Gcode::Img2Gcode(const QStringList &lArgs, QObject *parent) : QObject(parent
     m_sImgFileName = lArgs[1];
     m_sGcodeFileName = lArgs[2];
     m_pSrcImage = NULL;
+    m_sLaserPin = lArgs[3];
 }
 
 Img2Gcode::~Img2Gcode()
