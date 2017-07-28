@@ -9,12 +9,13 @@
 void Img2Gcode::InitializePrint()
 {
     m_lGcode
-                <<"; Default start code"
-                <<"G28 ; Home extruder"
-                <<"G1 Z15 F2000"
-                <<"M107 ; Turn off fan"
-                <<"G90 ; Absolute positioning"
-                <<"G1 Z40.00";
+                << "; Default start code"
+                << ("M42 P" + m_sLaserPin + " S0")
+                << "G28 ; Home extruder"
+                << "G1 Z15 F2000"
+                << "M107 ; Turn off fan"
+                << "G90 ; Absolute positioning"
+                << "G1 Z40.00";
 }
 
 void Img2Gcode::FinilizePrint()
@@ -22,11 +23,25 @@ void Img2Gcode::FinilizePrint()
     m_lGcode << "G28";
 }
 
+void Img2Gcode::EmitLine(int iStart, int y, int iEnd)
+{
+    m_lGcode
+            << MoveTo(iStart, y)
+            << "G4 P30"
+            << ("M42 P" + m_sLaserPin + " S255")
+            << MoveTo(iEnd, y)
+            << ("M42 P" + m_sLaserPin + " S0")
+            << "G4 P30";
+}
+
 void Img2Gcode::GenerateLine(int y)
 {
     bool bTraceOn = false;
-    int iTraceStart = 0;
-    for(int x = 0; x < m_pSrcImage->width(); x++)
+    int iTraceStart = (y % 2 == 0 ? 0 : m_pSrcImage->width()-1);
+    int iXStep = (y % 2) == 0 ? 1 : -1;
+    int iForceTraceEndX = (y % 2== 0) ? m_pSrcImage->width() : 0;
+
+    for(int x = iTraceStart; ((y % 2== 0) ? (x < m_pSrcImage->width()) : (x >= 0)); x += iXStep)
     {
         bool bNewTraceOn = QColor(m_pSrcImage->pixel(x,y)).blue() > 20;
         if(bNewTraceOn != bTraceOn)
@@ -38,13 +53,13 @@ void Img2Gcode::GenerateLine(int y)
             }
             else
             {
-                m_lGcode
-                        << MoveTo(iTraceStart, y)
-                        << ("M42 P" + m_sLaserPin + " S255")
-                        << MoveTo(x-1, y)
-                        << ("M42 P" + m_sLaserPin + " S0");
+                EmitLine(iTraceStart, y, x-1);
             }
         }
+    }
+    if(bTraceOn)
+    {
+        EmitLine(iTraceStart, y, iForceTraceEndX);
     }
 }
 
