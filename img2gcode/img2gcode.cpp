@@ -6,6 +6,8 @@
 #define INCH2MM 25.4f
 #define Y_START -40.0f
 #define X_START -40.0f
+#define START_DELAY_G_CODE ";G4 P30"
+#define STOP_DELAY_G_CODE ";G4 P30"
 void Img2Gcode::InitializePrint()
 {
     m_lGcode
@@ -27,11 +29,12 @@ void Img2Gcode::EmitLine(int iStart, int y, int iEnd)
 {
     m_lGcode
             << MoveTo(iStart, y)
-            << "G4 P30"
+            << START_DELAY_G_CODE
             << ("M42 P" + m_sLaserPin + " S255")
             << MoveTo(iEnd, y)
-            << ("M42 P" + m_sLaserPin + " S0")
-            << "G4 P30";
+            << STOP_DELAY_G_CODE
+            << ("M42 P" + m_sLaserPin + " S0");
+
 }
 
 void Img2Gcode::GenerateLine(int y)
