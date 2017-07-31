@@ -8,8 +8,8 @@ class Img2Gcode : public QObject
 {
     Q_OBJECT
 
-    float       m_fImgDpiX;
-    float       m_fImgDpiY;
+    double      m_fImgDpiX;
+    double      m_fImgDpiY;
     QImage *    m_pSrcImage;
     QString     m_sImgFileName;
     QString     m_sGcodeFileName;
@@ -23,6 +23,8 @@ class Img2Gcode : public QObject
 
     void EmitLine(int iStart, int y, int iEnd);
     
+    void WriteGcode(const QString &sFileName);
+
 public:
     explicit Img2Gcode(const QStringList & lArgs, QObject *parent = nullptr);
     ~Img2Gcode();
