@@ -7,8 +7,7 @@
 #include <opencv2/imgproc/imgproc.hpp>
 
 cv::Mat src; cv::Mat src_gray; cv::Mat src_erode;
-int thresh = 0;
-int delate = 0;
+int erose = 1;
 cv::RNG rng(12345);
 std::vector<std::vector<cv::Point> > contours;
 std::vector<cv::Vec4i> hierarchy;
@@ -32,7 +31,7 @@ void thresh2_callback(int, void* )
     }
     qDebug() << "number of labels = " << count;*/
 
-    int w = 1;
+    int w = std::max(erose, 1);
     int erosion_elem = 0;
     int erosion_type;
     if( erosion_elem == 0 ){ erosion_type = cv::MORPH_RECT; }
@@ -42,10 +41,10 @@ void thresh2_callback(int, void* )
 
     cv::Mat drawing = cv::Mat::zeros(src_gray.size(), CV_8UC3);
 
-    for(int idx = 0 ; idx >= 0 && idx < thresh; idx = hierarchy[idx][0] )
+    for(int idx = 0 ; idx >= 0; idx = hierarchy[idx][0] )
     {
         cv::Scalar color = cv::Scalar(rand() & 255, rand() & 255, rand() & 255);;
-        //cv::drawContours(drawing, contours, idx, color, 1 /*CV_FILLED*/, 8, hierarchy, 1, cv::Point());
+        cv::drawContours(drawing, contours, idx, color, 1 /*CV_FILLED*/, 8, hierarchy, 1, cv::Point());
         cv::Mat erode_src = cv::Mat::zeros(src_gray.size(), CV_8UC1);
         cv::drawContours(erode_src, contours, idx, cv::Scalar(255,255,255), CV_FILLED, 8, hierarchy, 1, cv::Point());
 
@@ -65,7 +64,6 @@ void thresh2_callback(int, void* )
                 cv::drawContours(drawing, contours2, idx2, color, 1 /*CV_FILLED*/, 8, hierarchy2, 1);
                 num_inside++;
             }
-            //w++;
         }while(num_inside);
     }
     cv::imshow("Contours", drawing);
@@ -89,9 +87,7 @@ void img2vectors::run()
 
 
     cv::findContours(src_gray, contours, hierarchy, cv::RETR_CCOMP, CV_CHAIN_APPROX_SIMPLE);//CV_CHAIN_APPROX_TC89_L1, cv::Point(0, 0));
-    thresh = contours.size();
-    cv::createTrackbar( " Draw count:", "Source", &thresh, contours.size(), thresh2_callback );
-    cv::createTrackbar( " Delate:", "Source", &delate, m_pSrcImage->height(), thresh2_callback );
+    cv::createTrackbar( " Erode:", "Source", &erose, 10, thresh2_callback );
 
 
     thresh2_callback(0,0);
