@@ -113,6 +113,11 @@ void Img2Gcode::run()
     m_pSrcImage = new QImage(m_sImgFileName);
     m_fImgDpiX = m_pSrcImage->dotsPerMeterX() * INCH2MM / 1000.0f;
     m_fImgDpiY = m_pSrcImage->dotsPerMeterY() * INCH2MM / 1000.0f;
+    qDebug() << "Image dpi is "<< m_fImgDpiX << "x" << m_fImgDpiY;
+    qDebug() << "PCB dimensions are "
+             << QString::number((m_pSrcImage->width() / m_fImgDpiX * INCH2MM))
+             << "x"
+             << QString::number((m_pSrcImage->height() / m_fImgDpiY * INCH2MM));
     InitializePrint();
     m_lGcode << ("G1 X"+QString::number(X_START * CORRECTION)+" Y"+QString::number(Y_START * CORRECTION));
     m_lGcode << ("M42 P" + m_sLaserPin + " S255");
