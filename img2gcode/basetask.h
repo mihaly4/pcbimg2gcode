@@ -3,19 +3,25 @@
 
 #include <QObject>
 
+enum output_format
+{
+    FORMAT_GCODE,
+    FORMAT_HPLG
+};
 
 class BaseTask : public QObject
 {
     Q_OBJECT
 
 protected:
-    QString     m_sImgFileName;
-    QString     m_sGcodeFileName;
-    QString     m_sLaserPin;
-    QImage *    m_pSrcImage;
-    float       m_fImgDpiX;
-    float       m_fImgDpiY;
-    QStringList m_lGcode;
+    output_format   m_iOutputFormat;
+    QString         m_sImgFileName;
+    QString         m_sGcodeFileName;
+    QString         m_sLaserPin;
+    QImage *        m_pSrcImage;
+    float           m_fImgDpiX;
+    float           m_fImgDpiY;
+    QStringList     m_lGcode;
 
     void InitializePrint();
     void FinilizePrint();

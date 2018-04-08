@@ -6,13 +6,21 @@
 
 void Img2Gcode::EmitLine(int iStart, int y, int iEnd)
 {
-    m_lGcode
-            << MoveTo(iStart, y)
-            << START_DELAY_G_CODE
-            << ("M42 P" + m_sLaserPin + " S255")
-            << MoveTo(iEnd, y)
-            << STOP_DELAY_G_CODE
-            << ("M42 P" + m_sLaserPin + " S0");
+    if(m_iOutputFormat == FORMAT_GCODE)
+    {
+        m_lGcode
+                << MoveTo(iStart, y)
+                << START_DELAY_G_CODE
+                << ("M42 P" + m_sLaserPin + " S255")
+                << MoveTo(iEnd, y)
+                << STOP_DELAY_G_CODE
+                << ("M42 P" + m_sLaserPin + " S0");
+    }
+    else
+    {
+        m_lGcode
+                << ("PU;"+MoveTo(iStart, y)+";PD;"+MoveTo(iEnd, y)+";PU");
+    }
 
 }
 
@@ -47,7 +55,7 @@ void Img2Gcode::GenerateLine(int y)
 
 QString Img2Gcode::MoveTo(int x, int y)
 {
-    return QString() + "G1 X" + QString::number(x / m_fImgDpiX * INCH2MM + X_START) + " Y" + QString::number(y / m_fImgDpiY * INCH2MM + Y_START);
+    return QString() + "PA" + QString::number(x / m_fImgDpiX * INCH2MM + X_START) + "," + QString::number(y / m_fImgDpiY * INCH2MM + Y_START);
 }
 
 Img2Gcode::Img2Gcode(const QStringList &lArgs, QObject *parent) : BaseTask(lArgs, parent)
