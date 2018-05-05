@@ -11,7 +11,10 @@ int erose = 2;
 
 cv::RNG rng(12345);
 
-
+int Pixel2Unit(int iPixel)
+{
+    return iPixel * 1.27f;
+}
 void img2vectors::CreateTracks()
 {
     cv::findContours(src_gray, tracks_contours, tracks_hierarchy, cv::RETR_CCOMP, CV_CHAIN_APPROX_SIMPLE);//CV_CHAIN_APPROX_TC89_L1, cv::Point(0, 0));
@@ -151,7 +154,7 @@ void img2vectors::EmitLines()
 
 QString img2vectors::PixelToHpgl(const QPoint &pt)
 {
-    return QString::number(pt.x()) + "," + QString::number(pt.y());
+    return QString::number(Pixel2Unit(pt.x())) + "," + QString::number(Pixel2Unit(pt.y()));
 }
 
 void img2vectors::run()
