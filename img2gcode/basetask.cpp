@@ -19,7 +19,7 @@ void BaseTask::InitializePrint()
     }
     else
     {
-        m_lGcode << "IN";
+        //m_lGcode << "IN";
     }
 }
 
@@ -29,8 +29,8 @@ void BaseTask::FinilizePrint()
     {
         m_lGcode << "G28";
     }
-    else
-        m_lGcode << "PU";
+    //else
+        //m_lGcode << "PU";
 }
 
 void BaseTask::WriteGcode()

@@ -143,11 +143,18 @@ void img2vectors::EmitLines()
         const QVector<QPoint> & lLine = m_lLines[i];
         if(lLine.size())
         {
-            m_lGcode << ("PU;PA" + PixelToHpgl(lLine.first()) + ";PD");
+            QString sLastPosition = PixelToHpgl(lLine.first());
+            m_lGcode << ("PA" + sLastPosition + ";PD");
             for(int  j = 1; j < lLine.count(); j++)
             {
-                m_lGcode << ("PA"+PixelToHpgl(lLine[j]));
+                QString sNextPosition = PixelToHpgl(lLine[j]);
+                if(sNextPosition != sLastPosition)
+                {
+                    m_lGcode << ("PA"+sNextPosition);
+                    sLastPosition = sNextPosition;
+                }
             }
+            m_lGcode << "PU";
         }
     }
 }
