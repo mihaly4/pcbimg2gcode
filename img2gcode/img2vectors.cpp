@@ -144,7 +144,8 @@ void img2vectors::EmitLines()
         if(lLine.size())
         {
             QString sLastPosition = PixelToHpgl(lLine.first());
-            m_lGcode << ("PA" + sLastPosition + ";PD");
+            m_lGcode << ("PA" + sLastPosition);
+            m_lGcode << "PD";
             for(int  j = 1; j < lLine.count(); j++)
             {
                 QString sNextPosition = PixelToHpgl(lLine[j]);

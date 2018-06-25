@@ -13,6 +13,7 @@ struct contour_t
     {
 
     }
+
     contour_t(const contour_t & other)
     {
         m_lContours = other.m_lContours;
@@ -27,6 +28,7 @@ struct contour_t
             //num_inside++;
         }
     }
+
     int LineCount() const
     {
         int count = 0;
@@ -36,6 +38,7 @@ struct contour_t
         }
         return count;
     }
+
     QList<QVector<QPoint>> GetLines() const
     {
         QList<QVector<QPoint>> lines;
@@ -44,12 +47,12 @@ struct contour_t
         {
             QVector<QPoint> line;
             const std::vector<cv::Point>  & contour = m_lContours[idx2];
-            for(int p = 0; p < contour.size()-1; p++)
+            for(int p = 0; p < contour.size(); p++)
             {
                 line.append(QPoint(contour[p].x, contour[p].y));
-                line.append(QPoint(contour[p+1].x, contour[p+1].y));
+                //line.append(QPoint(contour[p+1].x, contour[p+1].y));
             }
-            line.append(QPoint(contour.back().x, contour.back().y));
+            //line.append(QPoint(contour.back().x, contour.back().y));
             line.append(QPoint(contour.front().x, contour.front().y));
             lines.append(line);
         }
@@ -84,6 +87,7 @@ struct track_t
         }
        // cv::drawContours(img_draw, THIS->tracks_contours, track.m_iHindex, track.m_tColor, CV_FILLED, 8, THIS->tracks_hierarchy, 1, cv::Point());
     }
+
     int LineCount()
     {
         int res = 0;
@@ -93,6 +97,7 @@ struct track_t
         }
         return res;
     }
+
     QList<QVector<QPoint>> GetLines() const
     {
         QList<QVector<QPoint>> lines;

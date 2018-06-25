@@ -19,7 +19,7 @@ void BaseTask::InitializePrint()
     }
     else
     {
-        //m_lGcode << "IN";
+        m_lGcode << "PU";
     }
 }
 
