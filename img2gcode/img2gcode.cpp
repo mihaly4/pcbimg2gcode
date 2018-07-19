@@ -18,8 +18,8 @@ void Img2Gcode::EmitLine(int iStart, int y, int iEnd)
     }
     else
     {
-        m_lGcode
-                << ("PU;"+MoveTo(iStart, y)+";PD;"+MoveTo(iEnd, y)+";PU");
+        m_lGcode << ("PA"+PixelToHpgl(QPoint(iStart, y)) + ";PD;PA" + PixelToHpgl(QPoint(iEnd, y)) + ";PU");
+        //m_lGcode << ("PU;"+MoveTo(iStart, y)+";PD;"+MoveTo(iEnd, y)+";PU");
     }
 
 }

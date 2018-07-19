@@ -3,6 +3,11 @@
 #include <QImage>
 #include <QFile>
 
+int Pixel2Unit(int iPixel)
+{
+    return iPixel * 1.27f;
+}
+
 void BaseTask::InitializePrint()
 {
     m_lGcode.clear();
@@ -48,6 +53,11 @@ void BaseTask::WriteGcode()
         }
         tOutFile.close();
     }
+}
+
+QString BaseTask::PixelToHpgl(const QPoint &pt)
+{
+    return QString::number(Pixel2Unit(pt.x())) + "," + QString::number(Pixel2Unit(pt.y()));
 }
 
 BaseTask::BaseTask(const QStringList &lArgs, QObject *parent) : QObject(parent)

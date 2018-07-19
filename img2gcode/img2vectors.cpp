@@ -7,14 +7,11 @@
 #include <opencv2/highgui/highgui.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
 
-int erose = 2;
+int erose = 3;
 
 cv::RNG rng(12345);
 
-int Pixel2Unit(int iPixel)
-{
-    return iPixel * 1.27f;
-}
+
 void img2vectors::CreateTracks()
 {
     cv::findContours(src_gray, tracks_contours, tracks_hierarchy, cv::RETR_CCOMP, CV_CHAIN_APPROX_SIMPLE);//CV_CHAIN_APPROX_TC89_L1, cv::Point(0, 0));
@@ -92,6 +89,8 @@ void img2vectors::thresh2_callback(int, void* data)
         cv::Mat lastNonEmptyContour;// = img_track.clone();
         while(true)
         {
+            /// Draw rect arount everything, cuz erode does not work on image bounds
+            cv::rectangle(img_track, cv::Rect(0,0, img_track.cols -1, img_track.rows -1), cv::Scalar(0));
             /// Apply the erosion operation
             cv::erode( img_track, img_track, element );
             contour_t tContour;
@@ -160,10 +159,7 @@ void img2vectors::EmitLines()
     }
 }
 
-QString img2vectors::PixelToHpgl(const QPoint &pt)
-{
-    return QString::number(Pixel2Unit(pt.x())) + "," + QString::number(Pixel2Unit(pt.y()));
-}
+
 
 void img2vectors::run()
 {
