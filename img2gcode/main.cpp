@@ -19,7 +19,9 @@ int main(int argc, char *argv[])
     parser.addPositionalArgument("out", QCoreApplication::translate("main", "G-code file."));
     parser.addPositionalArgument("pin", QCoreApplication::translate("main", "Laser control pin."));
     QCommandLineOption tVectorizeOption("vectorize", QCoreApplication::translate("main", "Vectorize image"));
+    QCommandLineOption tHorizontalScanOption("xscan", QCoreApplication::translate("main", "Horizontal scan"));
     parser.addOption(tVectorizeOption);
+    parser.addOption(tHorizontalScanOption);
     parser.process(a);
     if(parser.positionalArguments().count() < 3)
     {
@@ -29,7 +31,7 @@ int main(int argc, char *argv[])
     if(parser.isSet(tVectorizeOption))
         task = new img2vectors(parser.positionalArguments(), &a);
     else
-        task = new Img2Gcode(parser.positionalArguments(), &a);
+        task = new Img2Gcode(parser.positionalArguments(), parser.isSet(tHorizontalScanOption), &a);
     QObject::connect(task, SIGNAL(finished()), &a, SLOT(quit()));
     QTimer::singleShot(0, task, SLOT(run()));
     return a.exec();
