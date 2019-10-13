@@ -51,7 +51,7 @@ void Img2Gcode::GenerateLine(int y)
 
     for(int x = iTraceStart; x != (iForceTraceEndX + iXStep); x += iXStep)
     {
-        bool bNewTraceOn = QColor(m_pSrcImage->pixel(x,y)).blue() > 20;
+        bool bNewTraceOn = QColor(m_pSrcImage->pixel(x,y)).blue() > 20 || QColor(m_pSrcImage->pixel(x,y)).green() > 20;
         if(bNewTraceOn != bTraceOn)
         {
             bTraceOn = bNewTraceOn;

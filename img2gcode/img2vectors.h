@@ -126,7 +126,9 @@ class img2vectors : public BaseTask
     contour_t ExtractContours(const cv::Mat &src_img);
     static void thresh2_callback(int, void *data);
     void DrawResult();
-    void EmitLines();    
+    void EmitLines();
+    void SimplifyDiagonals();
+    void RemoveCircles();
 public:
     explicit img2vectors(const QStringList &lArgs, QObject *parent = nullptr);
 

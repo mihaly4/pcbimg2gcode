@@ -27,7 +27,7 @@ int main(int argc, char *argv[])
     {
         parser.showHelp(-1);
     }
-    BaseTask *task = NULL;
+    BaseTask *task = nullptr;
     if(parser.isSet(tVectorizeOption))
         task = new img2vectors(parser.positionalArguments(), &a);
     else
