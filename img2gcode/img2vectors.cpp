@@ -14,7 +14,7 @@ cv::RNG rng(12345);
 
 void img2vectors::CreateTracks()
 {
-    cv::findContours(src_gray, tracks_contours, tracks_hierarchy, cv::RETR_CCOMP, CV_CHAIN_APPROX_SIMPLE);//CV_CHAIN_APPROX_TC89_L1, cv::Point(0, 0));
+    cv::findContours(src_gray, tracks_contours, tracks_hierarchy, cv::RETR_CCOMP, cv::CHAIN_APPROX_SIMPLE);//CV_CHAIN_APPROX_TC89_L1, cv::Point(0, 0));
     for(int idx = 0 ; idx >= 0; idx = tracks_hierarchy[idx][0] )
     {
         track_t track(idx);
@@ -52,7 +52,7 @@ void img2vectors::CreateSkeleton(const cv::Mat & track_img, track_t & track)
 contour_t img2vectors::ExtractContours(const cv::Mat &src_img)
 {
     contour_t result;
-    cv::findContours(src_img, result.m_lContours, result.m_lHierarchy, cv::RETR_CCOMP, CV_CHAIN_APPROX_SIMPLE);
+    cv::findContours(src_img, result.m_lContours, result.m_lHierarchy, cv::RETR_CCOMP, cv::CHAIN_APPROX_SIMPLE);
     return result;
 }
 
@@ -74,7 +74,7 @@ void img2vectors::thresh2_callback(int, void* data)
 
         //Prepare track image
         img_track.setTo(cv::Scalar(0));
-        cv::drawContours(img_track, THIS->tracks_contours, track.m_iHindex, cv::Scalar(255), CV_FILLED, 8, THIS->tracks_hierarchy, 1, cv::Point());
+        cv::drawContours(img_track, THIS->tracks_contours, track.m_iHindex, cv::Scalar(255), cv::FILLED, 8, THIS->tracks_hierarchy, 1, cv::Point());
 
         //Edore and create contours
 
@@ -94,7 +94,7 @@ void img2vectors::thresh2_callback(int, void* data)
             /// Apply the erosion operation
             cv::erode( img_track, img_track, element );
             contour_t tContour;
-            cv::findContours(img_track, tContour.m_lContours, tContour.m_lHierarchy, cv::RETR_CCOMP, CV_CHAIN_APPROX_SIMPLE);//CV_CHAIN_APPROX_TC89_L1, cv::Point(0, 0));
+            cv::findContours(img_track, tContour.m_lContours, tContour.m_lHierarchy, cv::RETR_CCOMP, cv::CHAIN_APPROX_SIMPLE);//CV_CHAIN_APPROX_TC89_L1, cv::Point(0, 0));
             if(tContour.m_lHierarchy.size() == 0)
                 break;
             if(tContour.LineCount() == 0)
@@ -169,13 +169,13 @@ void img2vectors::run()
     src = cv::Mat(m_pSrcImage->height(), m_pSrcImage->width(), CV_8UC4, m_pSrcImage->scanLine(0));
 
     /// Convert image to bw
-    cv::cvtColor( src, src_gray, CV_BGR2GRAY );
+    cv::cvtColor( src, src_gray, cv::COLOR_BGR2GRAY );
     cv::threshold( src_gray, src_gray, 20, 255, 0 );
      drawing = cv::Mat::zeros(src_gray.size(), CV_8UC3);
 
 
     //cv::namedWindow( "Source", CV_WINDOW_AUTOSIZE );
-    cv::namedWindow("Contours", CV_WINDOW_AUTOSIZE);
+    cv::namedWindow("Contours", cv::WINDOW_AUTOSIZE);
     //cv::namedWindow("Skeleton", CV_WINDOW_AUTOSIZE);
     cv::imshow( "Source", src );
 
