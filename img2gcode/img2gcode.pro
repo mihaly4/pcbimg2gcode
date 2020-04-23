@@ -34,4 +34,5 @@ HEADERS += \
     basetask.h \
     common.h
 
+INCLUDEPATH += /usr/include/opencv4
 LIBS += -lopencv_core -lopencv_imgproc -lopencv_highgui
