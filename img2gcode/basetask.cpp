@@ -8,6 +8,11 @@ int Pixel2Unit(int iPixel)
     return iPixel * 1.27f;
 }
 
+int PixelF2Unit(float iPixel)
+{
+    return iPixel * 1.27f;
+}
+
 void BaseTask::InitializePrint()
 {
     m_lGcode.clear();
@@ -60,6 +65,11 @@ QString BaseTask::PixelToHpgl(const QPoint &pt)
     return QString::number(Pixel2Unit(pt.x())) + "," + QString::number(Pixel2Unit(pt.y()));
 }
 
+QString BaseTask::PixelToHpgl(const QPointF &pt)
+{
+    return QString::number(PixelF2Unit(pt.x())) + "," + QString::number(PixelF2Unit(pt.y()));
+}
+
 BaseTask::BaseTask(const QStringList &lArgs, QObject *parent) : QObject(parent)
 {
     m_sImgFileName = lArgs[0];
@@ -74,6 +84,6 @@ BaseTask::BaseTask(const QStringList &lArgs, QObject *parent) : QObject(parent)
 
 BaseTask::~BaseTask()
 {
-    if(m_pSrcImage != NULL)
+    if(m_pSrcImage != nullptr)
         delete m_pSrcImage;
 }

@@ -27,6 +27,7 @@ protected:
     void FinilizePrint();
     void WriteGcode();
     QString PixelToHpgl(const QPoint & pt);
+    QString PixelToHpgl(const QPointF & pt);
 public:
     explicit BaseTask(const QStringList &lArgs, QObject *parent = nullptr);
     ~BaseTask();
